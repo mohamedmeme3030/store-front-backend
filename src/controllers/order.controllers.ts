@@ -32,7 +32,7 @@ export const deleteOrder = async (req: Request, res: Response, next: NextFunctio
 
 export const index = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const indexResult = orderModel.index
+    const indexResult = orderModel.index()
     res.json({
       status: 200,
       data: indexResult,

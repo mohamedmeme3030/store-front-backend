@@ -3,6 +3,26 @@ import Order from '../types/order.type'
 import db from '../database'
 
 class OrderModel {
+  async getCurrentOrderByUserId(id: string): Promise<Order> {
+    let connection: PoolClient | undefined = undefined
+    try {
+      //open connection with DB
+      connection = await db.connect()
+      //sql query
+      const sql = `SELECT order_id, order_status FROM orders 
+       WHERE user_id=$1 `
+      // run query
+      const result = await connection.query<Order>(sql, [id])
+
+      //return created user
+      return result.rows[0]
+    } catch (error) {
+      throw new Error(`Unable to get Order : ${(error as Error).message}`)
+    } finally {
+      //after query release the connection
+      connection?.release()
+    }
+  }
   //create new
   async create(order: Order): Promise<Order> {
     let connection: PoolClient | undefined = undefined
