@@ -47,13 +47,14 @@ class UserModel {
       const sql = `SELECT id, first_name, last_name, email FROM users`
       // run query
       const result = await connection.query(sql)
+
       //return the result
       return result.rows
     } catch (err) {
       // throw new Error(`Unable to get all user: ${(err as Error).name}`)
       throw new Error(`Unable to get all user: ${(err as Error).stack}`)
     } finally {
-      connection?.release
+      connection?.release()
     }
   }
   //get specific user
@@ -72,7 +73,7 @@ class UserModel {
     } catch (err) {
       throw new Error(`Unable to create user: ${(err as Error).message}`)
     } finally {
-      connection?.release
+      connection?.release()
     }
   }
   //update user
@@ -94,13 +95,12 @@ class UserModel {
         hashPassword(user.password),
         user.id
       ])
-      connection.release
       return result.rows[0]
     } catch (err) {
       throw new Error(`Unable to update user: ${(err as Error).message}`)
     } finally {
       //release connection
-      connection?.release
+      connection?.release()
     }
   }
   //delete user
@@ -115,7 +115,6 @@ class UserModel {
                    RETURNING id, first_name, last_name, password, email `
       // run query
       const result = await connection.query(sql, [id])
-      connection?.release
 
       //return the result
       return result.rows[0]
@@ -123,7 +122,7 @@ class UserModel {
       throw new Error(`Unable to delete user: ${(err as Error).message}`)
     } finally {
       //release connection
-      connection?.release
+      connection?.release()
     }
   }
   //authuanticat user
@@ -146,7 +145,7 @@ class UserModel {
     } catch (err) {
       throw new Error(`Unable to authenticate user: ${(err as Error).message}`)
     } finally {
-      connection?.release
+      connection?.release()
     }
   }
 }

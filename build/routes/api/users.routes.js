@@ -33,7 +33,7 @@ var athentication_middleware_1 = __importDefault(require("../../middleware/athen
 var routes = (0, express_1.Router)();
 //user routing
 routes.route('/create').post(controllers.create);
-routes.route('/show/:id').get(athentication_middleware_1.default, controllers.getSpecificUser);
+routes.route('/get/:id').get(athentication_middleware_1.default, controllers.getSpecificUser);
 routes.route('/index').get(athentication_middleware_1.default, controllers.getAllUser);
 routes.route('/delete/:id').delete(athentication_middleware_1.default, controllers.deleteUser);
 routes.route('/update').patch(athentication_middleware_1.default, controllers.updateSpecificUser);

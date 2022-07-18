@@ -122,7 +122,7 @@ var UserModel = /** @class */ (function () {
                         // throw new Error(`Unable to get all user: ${(err as Error).name}`)
                         throw new Error("Unable to get all user: ".concat(err_1.stack));
                     case 5:
-                        connection === null || connection === void 0 ? void 0 : connection.release;
+                        connection === null || connection === void 0 ? void 0 : connection.release();
                         return [7 /*endfinally*/];
                     case 6: return [2 /*return*/];
                 }
@@ -158,7 +158,7 @@ var UserModel = /** @class */ (function () {
                         err_2 = _a.sent();
                         throw new Error("Unable to create user: ".concat(err_2.message));
                     case 5:
-                        connection === null || connection === void 0 ? void 0 : connection.release;
+                        connection === null || connection === void 0 ? void 0 : connection.release();
                         return [7 /*endfinally*/];
                     case 6: return [2 /*return*/];
                 }
@@ -192,14 +192,13 @@ var UserModel = /** @class */ (function () {
                             ])];
                     case 3:
                         result = _a.sent();
-                        connection.release;
                         return [2 /*return*/, result.rows[0]];
                     case 4:
                         err_3 = _a.sent();
                         throw new Error("Unable to update user: ".concat(err_3.message));
                     case 5:
                         //release connection
-                        connection === null || connection === void 0 ? void 0 : connection.release;
+                        connection === null || connection === void 0 ? void 0 : connection.release();
                         return [7 /*endfinally*/];
                     case 6: return [2 /*return*/];
                 }
@@ -224,10 +223,11 @@ var UserModel = /** @class */ (function () {
                         //open connection with DB
                         connection = _a.sent();
                         sql = "DELETE FROM users WHERE id=($1)\n                   RETURNING id, first_name, last_name, password, email ";
-                        return [4 /*yield*/, connection.query(sql, [id])];
+                        return [4 /*yield*/, connection.query(sql, [id])
+                            //return the result
+                        ];
                     case 3:
                         result = _a.sent();
-                        connection === null || connection === void 0 ? void 0 : connection.release;
                         //return the result
                         return [2 /*return*/, result.rows[0]];
                     case 4:
@@ -235,7 +235,7 @@ var UserModel = /** @class */ (function () {
                         throw new Error("Unable to delete user: ".concat(err_4.message));
                     case 5:
                         //release connection
-                        connection === null || connection === void 0 ? void 0 : connection.release;
+                        connection === null || connection === void 0 ? void 0 : connection.release();
                         return [7 /*endfinally*/];
                     case 6: return [2 /*return*/];
                 }
@@ -274,7 +274,7 @@ var UserModel = /** @class */ (function () {
                         err_5 = _a.sent();
                         throw new Error("Unable to authenticate user: ".concat(err_5.message));
                     case 7:
-                        connection === null || connection === void 0 ? void 0 : connection.release;
+                        connection === null || connection === void 0 ? void 0 : connection.release();
                         return [7 /*endfinally*/];
                     case 8: return [2 /*return*/];
                 }

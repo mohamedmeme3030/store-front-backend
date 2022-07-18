@@ -45,51 +45,48 @@ var OrderModel = /** @class */ (function () {
     }
     OrderModel.prototype.getCurrentOrderByUserId = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var connection, sqlToGetOrderList, result, arrProduct, _i, _a, order, products, error_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var connection, sqlToGetOrderList, result, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         connection = undefined;
-                        _b.label = 1;
+                        _a.label = 1;
                     case 1:
-                        _b.trys.push([1, 8, 9, 10]);
+                        _a.trys.push([1, 4, 5, 6]);
                         return [4 /*yield*/, database_1.default.connect()
                             //sql query
                         ];
                     case 2:
                         //open connection with DB
-                        connection = _b.sent();
+                        connection = _a.sent();
                         sqlToGetOrderList = "SELECT order_id, order_status FROM orders \n       WHERE user_id=$1 ";
                         return [4 /*yield*/, connection.query(sqlToGetOrderList, [id])
                             //array of product
+                            // let arrProduct: Product[] | undefined = undefined
+                            // for (const order of result.rows) {
+                            //   const products = await this.getProductsOfOrder(order.order_id as string)
+                            //   arrProduct = products
+                            // }
+                            //return created user
                         ];
                     case 3:
-                        result = _b.sent();
-                        arrProduct = undefined;
-                        _i = 0, _a = result.rows;
-                        _b.label = 4;
+                        result = _a.sent();
+                        //array of product
+                        // let arrProduct: Product[] | undefined = undefined
+                        // for (const order of result.rows) {
+                        //   const products = await this.getProductsOfOrder(order.order_id as string)
+                        //   arrProduct = products
+                        // }
+                        //return created user
+                        return [2 /*return*/, result.rows];
                     case 4:
-                        if (!(_i < _a.length)) return [3 /*break*/, 7];
-                        order = _a[_i];
-                        return [4 /*yield*/, this.getProductsOfOrder(order.order_id)];
-                    case 5:
-                        products = _b.sent();
-                        arrProduct = products;
-                        _b.label = 6;
-                    case 6:
-                        _i++;
-                        return [3 /*break*/, 4];
-                    case 7: 
-                    //return created user
-                    return [2 /*return*/, result.rows];
-                    case 8:
-                        error_1 = _b.sent();
+                        error_1 = _a.sent();
                         throw new Error("Unable to get Order : ".concat(error_1.message));
-                    case 9:
+                    case 5:
                         //after query release the connection
                         connection === null || connection === void 0 ? void 0 : connection.release();
                         return [7 /*endfinally*/];
-                    case 10: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
@@ -131,64 +128,58 @@ var OrderModel = /** @class */ (function () {
     //create new
     OrderModel.prototype.create = function (order) {
         return __awaiter(this, void 0, void 0, function () {
-            var connection, sqlInsertBasicOrderInfo, resultInsertBasicOrderInfo, sqlOrderProduct, productArr, resultProductOrder, _i, _a, product, error_2;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var connection, sqlInsertBasicOrderInfo, resultInsertBasicOrderInfo, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         connection = undefined;
-                        _b.label = 1;
+                        _a.label = 1;
                     case 1:
-                        _b.trys.push([1, 8, 9, 10]);
+                        _a.trys.push([1, 4, 5, 6]);
                         return [4 /*yield*/, database_1.default.connect()
                             //sql query to insert into basic order info(user_id, status)
                         ];
                     case 2:
                         //open connection with DB
-                        connection = _b.sent();
+                        connection = _a.sent();
                         sqlInsertBasicOrderInfo = "INSERT INTO orders (user_id, order_status) \n      VALUES ($1,$2) returning user_id, order_status, order_id ";
                         return [4 /*yield*/, connection.query(sqlInsertBasicOrderInfo, [
                                 order.user_id,
                                 order.order_status
                             ])];
                     case 3:
-                        resultInsertBasicOrderInfo = _b.sent();
+                        resultInsertBasicOrderInfo = _a.sent();
                         if (resultInsertBasicOrderInfo.rowCount === 0)
                             throw new Error("not able to create order");
-                        sqlOrderProduct = "INSERT INTO p_order (p_id, o_id, quantity)\n                               VALUES ($1,$2,$3) returning *";
-                        productArr = [];
-                        resultProductOrder = undefined;
-                        _i = 0, _a = order.products;
-                        _b.label = 4;
+                        //indeed we need insert order id and product id
+                        //to able to get all products by the order id
+                        // const sqlOrderProduct = `INSERT INTO p_order (p_id, o_id, quantity)
+                        //                          VALUES ($1,$2,$3) returning *`
+                        // //productArr this array of products of this order
+                        // const productArr = []
+                        // let resultProductOrder = undefined
+                        // for (const product of order.products) {
+                        //   // product.quantity = 1
+                        //   // console.log(product)
+                        //   //run query that insert into order_product
+                        //   resultProductOrder = await connection.query<Order>(sqlOrderProduct, [
+                        //     product.id,
+                        //     resultInsertBasicOrderInfo.rows[0].order_id,
+                        //     product.quantity
+                        //   ])
+                        //   //push this current product to arr
+                        //   productArr.push(resultProductOrder.rows[0])
+                        // }
+                        //return created user
+                        return [2 /*return*/, order];
                     case 4:
-                        if (!(_i < _a.length)) return [3 /*break*/, 7];
-                        product = _a[_i];
-                        return [4 /*yield*/, connection.query(sqlOrderProduct, [
-                                product.id,
-                                resultInsertBasicOrderInfo.rows[0].order_id,
-                                product.quantity
-                            ])
-                            //push this current product to arr
-                        ];
-                    case 5:
-                        //run query that insert into order_product
-                        resultProductOrder = _b.sent();
-                        //push this current product to arr
-                        productArr.push(resultProductOrder.rows[0]);
-                        _b.label = 6;
-                    case 6:
-                        _i++;
-                        return [3 /*break*/, 4];
-                    case 7: 
-                    //return created user
-                    return [2 /*return*/, order];
-                    case 8:
-                        error_2 = _b.sent();
+                        error_2 = _a.sent();
                         throw new Error("Unable to create Order : ".concat(error_2.message));
-                    case 9:
+                    case 5:
                         //after query release the connection
                         connection === null || connection === void 0 ? void 0 : connection.release();
                         return [7 /*endfinally*/];
-                    case 10: return [2 /*return*/];
+                    case 6: return [2 /*return*/];
                 }
             });
         });
@@ -221,7 +212,7 @@ var OrderModel = /** @class */ (function () {
                         err_2 = _a.sent();
                         throw new Error('somthing wrong happened in server');
                     case 5:
-                        connection === null || connection === void 0 ? void 0 : connection.release;
+                        connection === null || connection === void 0 ? void 0 : connection.release();
                         return [7 /*endfinally*/];
                     case 6: return [2 /*return*/];
                 }
@@ -258,7 +249,7 @@ var OrderModel = /** @class */ (function () {
                         throw new Error("Unable to delete order: ".concat(err_3.message));
                     case 5:
                         //release connection
-                        connection === null || connection === void 0 ? void 0 : connection.release;
+                        connection === null || connection === void 0 ? void 0 : connection.release();
                         return [7 /*endfinally*/];
                     case 6: return [2 /*return*/];
                 }

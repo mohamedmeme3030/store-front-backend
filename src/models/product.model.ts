@@ -11,7 +11,7 @@ class ProductModel {
       //open connection with DB
       connection = await db.connect()
       //sql query
-      const sql = `SELECT * FROM product`
+      const sql = `SELECT id, name, price, category FROM product`
       // run query
       const result = await connection.query(sql)
       //return the result
@@ -20,7 +20,7 @@ class ProductModel {
       // throw new Error(`Unable to get all user: ${(err as Error).name}`)
       throw new Error(`Unable to get all products: ${(err as Error).stack}`)
     } finally {
-      connection?.release
+      connection?.release()
     }
   }
   //show Specific Product
@@ -39,7 +39,7 @@ class ProductModel {
     } catch (err) {
       throw new Error(`Unable to show product: ${(err as Error).message}`)
     } finally {
-      connection?.release
+      connection?.release()
     }
   }
   //create new product
@@ -82,7 +82,7 @@ class ProductModel {
       throw new Error(`Unable to delete product: ${(err as Error).message}`)
     } finally {
       //release connection
-      connection?.release
+      connection?.release()
     }
   }
 

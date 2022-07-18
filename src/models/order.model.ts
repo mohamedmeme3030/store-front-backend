@@ -17,11 +17,11 @@ class OrderModel {
       // run query
       const result = await connection.query<Order>(sqlToGetOrderList, [id])
       //array of product
-      let arrProduct: Product[] | undefined = undefined
-      for (const order of result.rows) {
-        const products = await this.getProductsOfOrder(order.order_id as string)
-        arrProduct = products
-      }
+      // let arrProduct: Product[] | undefined = undefined
+      // for (const order of result.rows) {
+      //   const products = await this.getProductsOfOrder(order.order_id as string)
+      //   arrProduct = products
+      // }
       //return created user
       return result.rows
     } catch (error) {
@@ -72,21 +72,23 @@ class OrderModel {
       if (resultInsertBasicOrderInfo.rowCount === 0) throw new Error(`not able to create order`)
       //indeed we need insert order id and product id
       //to able to get all products by the order id
-      const sqlOrderProduct = `INSERT INTO p_order (p_id, o_id, quantity)
-                               VALUES ($1,$2,$3) returning *`
-      //productArr this array of products of this order
-      const productArr = []
-      let resultProductOrder = undefined
-      for (const product of order.products) {
-        //run query that insert into order_product
-        resultProductOrder = await connection.query<Order>(sqlOrderProduct, [
-          product.id,
-          resultInsertBasicOrderInfo.rows[0].order_id,
-          product.quantity
-        ])
-        //push this current product to arr
-        productArr.push(resultProductOrder.rows[0])
-      }
+      // const sqlOrderProduct = `INSERT INTO p_order (p_id, o_id, quantity)
+      //                          VALUES ($1,$2,$3) returning *`
+      // //productArr this array of products of this order
+      // const productArr = []
+      // let resultProductOrder = undefined
+      // for (const product of order.products) {
+      //   // product.quantity = 1
+      //   // console.log(product)
+      //   //run query that insert into order_product
+      //   resultProductOrder = await connection.query<Order>(sqlOrderProduct, [
+      //     product.id,
+      //     resultInsertBasicOrderInfo.rows[0].order_id,
+      //     product.quantity
+      //   ])
+      //   //push this current product to arr
+      //   productArr.push(resultProductOrder.rows[0])
+      // }
 
       //return created user
       return order
@@ -112,7 +114,7 @@ class OrderModel {
     } catch (err) {
       throw new Error('somthing wrong happened in server')
     } finally {
-      connection?.release
+      connection?.release()
     }
   }
 
@@ -135,7 +137,7 @@ class OrderModel {
       throw new Error(`Unable to delete order: ${(err as Error).message}`)
     } finally {
       //release connection
-      connection?.release
+      connection?.release()
     }
   }
 }

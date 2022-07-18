@@ -8,8 +8,9 @@ import config from '../config'
 const userModel = new UserModel()
 export const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { email, first_name, last_name, password } = req.body
     //this await function just to wait response of create methode
-    const user = await userModel.create(req.body)
+    const user = await userModel.create({ email, first_name, last_name, password })
     res.json({
       status: 200,
       //we user spread operator to copy a full object

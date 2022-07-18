@@ -60,7 +60,7 @@ var ProductModel = /** @class */ (function () {
                     case 2:
                         //open connection with DB
                         connection = _a.sent();
-                        sql = "SELECT * FROM product";
+                        sql = "SELECT id, name, price, category FROM product";
                         return [4 /*yield*/, connection.query(sql)
                             //return the result
                         ];
@@ -73,7 +73,7 @@ var ProductModel = /** @class */ (function () {
                         // throw new Error(`Unable to get all user: ${(err as Error).name}`)
                         throw new Error("Unable to get all products: ".concat(err_1.stack));
                     case 5:
-                        connection === null || connection === void 0 ? void 0 : connection.release;
+                        connection === null || connection === void 0 ? void 0 : connection.release();
                         return [7 /*endfinally*/];
                     case 6: return [2 /*return*/];
                 }
@@ -109,7 +109,7 @@ var ProductModel = /** @class */ (function () {
                         err_2 = _a.sent();
                         throw new Error("Unable to show product: ".concat(err_2.message));
                     case 5:
-                        connection === null || connection === void 0 ? void 0 : connection.release;
+                        connection === null || connection === void 0 ? void 0 : connection.release();
                         return [7 /*endfinally*/];
                     case 6: return [2 /*return*/];
                 }
@@ -183,7 +183,7 @@ var ProductModel = /** @class */ (function () {
                         throw new Error("Unable to delete product: ".concat(err_3.message));
                     case 5:
                         //release connection
-                        connection === null || connection === void 0 ? void 0 : connection.release;
+                        connection === null || connection === void 0 ? void 0 : connection.release();
                         return [7 /*endfinally*/];
                     case 6: return [2 /*return*/];
                 }

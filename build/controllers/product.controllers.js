@@ -115,7 +115,7 @@ var index = function (_req, res, next) { return __awaiter(void 0, void 0, void 0
                 indexResult = _a.sent();
                 res.json({
                     status: 'success',
-                    data: __assign({}, indexResult),
+                    data: indexResult,
                     message: 'index success'
                 });
                 return [3 /*break*/, 3];
@@ -135,7 +135,7 @@ var getProduct = function (req, res, next) { return __awaiter(void 0, void 0, vo
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, productModel.showSpecificProduct(req.query['id'])];
+                return [4 /*yield*/, productModel.showSpecificProduct(req.params.id)];
             case 1:
                 updatedUser = _a.sent();
                 res.json({
@@ -159,7 +159,7 @@ var deleteProduct = function (req, res, next) { return __awaiter(void 0, void 0,
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, productModel.deleteProduct(req.query['id'])];
+                return [4 /*yield*/, productModel.deleteProduct(req.params.id)];
             case 1:
                 deletedProduct = _a.sent();
                 res.json({

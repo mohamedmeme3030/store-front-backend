@@ -39,44 +39,48 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var order_model_1 = __importDefault(require("../order.model"));
+var user_model_1 = __importDefault(require("../user.model"));
 var product_model_1 = __importDefault(require("../product.model"));
 var database_1 = __importDefault(require("../../database"));
+var orderModel = new order_model_1.default();
+var userModel = new user_model_1.default();
 var productModel = new product_model_1.default();
-describe('This Suit will test the product Model Functionality', function () {
+describe('This Suit will test the order Model Functionality', function () {
     //to be define or existing
     describe('This will test existing methode', function () {
-        it('should have an methode that get all products', function () {
-            expect(productModel.indexProduct).toBeDefined();
-        });
-        it('should have an methode that get specific product ', function () {
-            expect(productModel.showSpecificProduct).toBeDefined();
-        });
-        it('should have an methode that update specific product ', function () {
-            expect(productModel.updateProduct).toBeDefined();
-        });
-        it('should have an methode that delete specific product ', function () {
-            expect(productModel.deleteProduct).toBeDefined();
-        });
-        it('should have an methode that create new product ', function () {
-            expect(productModel.create).toBeDefined();
+        it('should have an method that get all orders by user id', function () {
+            expect(orderModel.getCurrentOrderByUserId).toBeDefined();
         });
     });
     //logic of method
-    describe('This will test logic of product model', function () {
+    describe('This will test logic of order model', function () {
+        var order = {
+            order_status: 'active',
+            user_id: '',
+            products: []
+        };
         var product = {
             name: 'test',
             price: '1',
             category: 'ghg',
-            quantity: 2
+            quantity: 1
+        };
+        var user = {
+            email: 'test@gmail.com',
+            first_name: 'mohamed',
+            last_name: 'nasser',
+            password: '12313'
         };
         beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
-            var createProduct;
+            var createUser;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, productModel.create(product)];
+                    case 0: return [4 /*yield*/, userModel.create(user)];
                     case 1:
-                        createProduct = _a.sent();
-                        product.id = createProduct.id;
+                        createUser = _a.sent();
+                        user.id = createUser.id;
+                        order.user_id = user.id;
                         return [2 /*return*/];
                 }
             });
@@ -90,60 +94,37 @@ describe('This Suit will test the product Model Functionality', function () {
                     ];
                     case 1:
                         connection = _a.sent();
-                        sql = 'DELETE FROM product';
-                        return [4 /*yield*/, connection.query(sql)];
+                        sql = 'DELETE FROM orders';
+                        //   const sqlProduct = 'DELETE FROM p_order'
+                        return [4 /*yield*/, connection.query(sql)
+                            //   await connection.query(sqlProduct)
+                        ];
                     case 2:
+                        //   const sqlProduct = 'DELETE FROM p_order'
                         _a.sent();
+                        //   await connection.query(sqlProduct)
                         connection.release();
                         return [2 /*return*/];
                 }
             });
         }); });
         //so now database prepared
-        it('create method should return a new product', function () { return __awaiter(void 0, void 0, void 0, function () {
-            var createdProduct;
+        it('getCurrentOrderByUserId method should return a new list of orders that related to user id', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var createdProduct, createdOrder, ordersList;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, productModel.create({
-                            name: 'test2',
-                            price: '10',
-                            category: 'aa'
-                        })];
+                    case 0: return [4 /*yield*/, productModel.create(product)];
                     case 1:
                         createdProduct = _a.sent();
-                        expect(createdProduct).toEqual({
-                            id: createdProduct.id,
-                            name: 'test2',
-                            price: '10',
-                            category: 'aa'
-                        });
-                        return [2 /*return*/];
-                }
-            });
-        }); });
-        it('get all product should return all products from DB', function () { return __awaiter(void 0, void 0, void 0, function () {
-            var products;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, productModel.indexProduct()];
-                    case 1:
-                        products = _a.sent();
-                        expect(products.length).toBe(3);
-                        return [2 /*return*/];
-                }
-            });
-        }); });
-        it('get specific product by id', function () { return __awaiter(void 0, void 0, void 0, function () {
-            var returnedProduct;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, productModel.showSpecificProduct(product.id)];
-                    case 1:
-                        returnedProduct = _a.sent();
-                        expect(returnedProduct.id).toBe(product.id);
-                        expect(returnedProduct.name).toBe(product.name);
-                        expect(returnedProduct.price).toBe(product.price);
-                        expect(returnedProduct.category).toBe(product.category);
+                        order.products.push(createdProduct);
+                        return [4 /*yield*/, orderModel.create(order)];
+                    case 2:
+                        createdOrder = _a.sent();
+                        order.order_id = createdOrder.order_id;
+                        return [4 /*yield*/, orderModel.getCurrentOrderByUserId(user.id)];
+                    case 3:
+                        ordersList = _a.sent();
+                        expect(ordersList.length).toBe(1);
                         return [2 /*return*/];
                 }
             });

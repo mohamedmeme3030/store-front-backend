@@ -70,7 +70,7 @@ describe('This Suit will test the user Model Functionality', () => {
 
     it('get all user should return all users from DB', async () => {
       const users = await userModel.getAllUser()
-      expect(users.length).toBe(2)
+      expect(users.length).toBe(3)
     })
     it('get specific user by id', async () => {
       const returnedUser = await userModel.getSpecificUser(user.id as string)

@@ -11,7 +11,7 @@ let token = ''
 
 describe('This Suit will test User Api Endpoints', () => {
   const user = {
-    email: 'test@gmail.com',
+    email: 'testt@gmail.com',
     first_name: 'mohamed',
     last_name: 'nasser',
     password: '12313'
@@ -34,12 +34,12 @@ describe('This Suit will test User Api Endpoints', () => {
       const res = await request
         .post('/api/users/authenticate')
         .set('Content-type', 'application/json')
-        .send({ email: 'test@gmail.com', password: '12313' })
+        .send({ email: 'testt@gmail.com', password: '12313' })
 
       expect(res.status).toBe(200)
       const { id, email, token: userToken } = res.body.data
       expect(id).toBe(user.id)
-      expect(email).toBe('test@gmail.com')
+      expect(email).toBe('testt@gmail.com')
       token = userToken
     })
 
@@ -47,7 +47,7 @@ describe('This Suit will test User Api Endpoints', () => {
       const res = await request
         .post('/api/users/authenticate')
         .set('Content-type', 'application/json')
-        .send({ email: 'tta@gmail.com', password: '12313' })
+        .send({ email: 'tt@gmail.com', password: '12313' })
 
       expect(res.status).toBe(401)
     })
@@ -59,12 +59,11 @@ describe('This Suit will test User Api Endpoints', () => {
         .post('/api/users/create')
         .set('Content-type', 'application/json')
         .send({
-          email: 'karim@gmail.com',
           first_name: 'karim',
           last_name: 'nasser',
+          email: 'karim@gmail.com',
           password: '12313'
         } as User)
-
       expect(res.status).toBe(200)
       const { first_name, last_name, email } = res.body.data
       expect(first_name).toBe('karim')
@@ -77,38 +76,37 @@ describe('This Suit will test User Api Endpoints', () => {
         .get('/api/users/index')
         .set('Content-type', 'application/json')
         .set('Authorization', `Bearer ${token}`)
-
       expect(res.status).toBe(200)
       expect(res.body.data.length).toBe(2)
     })
 
-    // it('test get specific user by id', async () => {
-    //   const res = await request
-    //     .get(`/api/users/show/${user.id}`)
-    //     .set('Content-type', 'application/json')
-    //     .set('Authorization', `Bearer ${token}`)
+    it('test get specific user by id', async () => {
+      const res = await request
+        .get(`/api/users/get/${user.id}`)
+        .set('Content-type', 'application/json')
+        .set('Authorization', `Bearer ${token}`)
 
-    //   expect(res.status).toBe(200)
-    //   expect(res.body.data.first_name).toBe('mohamed')
-    //   expect(res.body.data.last_name).toBe('nasser')
-    //   expect(res.body.data.email).toBe('test@gmail.com')
-    // })
+      expect(res.status).toBe(200)
+      expect(res.body.data.first_name).toBe('mohamed')
+      expect(res.body.data.last_name).toBe('nasser')
+      expect(res.body.data.email).toBe('testt@gmail.com')
+    })
 
-    // it('test update user', async () => {
-    //   //prepar res
-    //   const res = await request
-    //     .patch('/api/users/update')
-    //     .set('Content-type', 'application/json')
-    //     .set('Authorization', `Bearer ${token}`)
-    //     .send({ ...user, first_name: 'mm', last_name: 'nn', email: 'mm@gmail.com' } as User)
-    //   //get the response
-    //   const { id, email, first_name, last_name } = res.body.data
-    //   expect(res.status).toBe(200)
-    //   expect(id).toBe(user.id)
-    //   expect(email).toBe('mm@gmail.com')
-    //   expect(first_name).toBe('mm')
-    //   expect(last_name).toBe('nn')
-    // })
+    it('test update user', async () => {
+      //prepar res
+      const res = await request
+        .patch('/api/users/update')
+        .set('Content-type', 'application/json')
+        .set('Authorization', `Bearer ${token}`)
+        .send({ ...user, first_name: 'mm', last_name: 'nn', email: 'mm@gmail.com' } as User)
+      //get the response
+      const { id, email, first_name, last_name } = res.body.data
+      expect(res.status).toBe(200)
+      expect(id).toBe(user.id)
+      expect(email).toBe('mm@gmail.com')
+      expect(first_name).toBe('mm')
+      expect(last_name).toBe('nn')
+    })
     it('test delete user', async () => {
       const res = await request
         .delete(`/api/users/delete/${user.id}`)
@@ -116,10 +114,9 @@ describe('This Suit will test User Api Endpoints', () => {
         .set('Authorization', `Bearer ${token}`)
 
       expect(res.status).toBe(200)
-      // expect(res.body.data).toBe('aaa')
-      expect(res.body.data.first_name).toBe('mohamed')
-      expect(res.body.data.last_name).toBe('nasser')
-      expect(res.body.data.email).toBe('test@gmail.com')
+      expect(res.body.data.first_name).toBe('mm')
+      expect(res.body.data.last_name).toBe('nn')
+      expect(res.body.data.email).toBe('mm@gmail.com')
     })
   })
 })

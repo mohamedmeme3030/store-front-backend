@@ -58,14 +58,15 @@ var config_1 = __importDefault(require("../config"));
 //now we have user model
 var userModel = new user_model_1.default();
 var create = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, err_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, email, first_name, last_name, password, user, err_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, userModel.create(req.body)];
+                _b.trys.push([0, 2, , 3]);
+                _a = req.body, email = _a.email, first_name = _a.first_name, last_name = _a.last_name, password = _a.password;
+                return [4 /*yield*/, userModel.create({ email: email, first_name: first_name, last_name: last_name, password: password })];
             case 1:
-                user = _a.sent();
+                user = _b.sent();
                 res.json({
                     status: 200,
                     //we user spread operator to copy a full object
@@ -74,7 +75,7 @@ var create = function (req, res, next) { return __awaiter(void 0, void 0, void 0
                 });
                 return [3 /*break*/, 3];
             case 2:
-                err_1 = _a.sent();
+                err_1 = _b.sent();
                 next(err_1);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];

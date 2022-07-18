@@ -5,9 +5,7 @@
 This Repo Backend Api for online store build by Nodejs,created RESTful API that can be used by onther developer.
 You Can explore Database shape and schema here [REQUIREMENT.md](REQUIREMENTS.md)
 
-## Required Technologies
-
-Your application must make use of the following libraries:
+## Lib
 
 - Postgres for the database
 - Node/Express for the application logic

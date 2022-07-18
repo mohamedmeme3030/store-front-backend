@@ -31,8 +31,8 @@ var athentication_middleware_1 = __importDefault(require("../../middleware/athen
 var controller = __importStar(require("../../controllers/product.controllers"));
 var routes = (0, express_1.Router)();
 routes.route('/index').get(athentication_middleware_1.default, controller.index);
-routes.route('/get').get(athentication_middleware_1.default, controller.getProduct);
+routes.route('/get/:id').get(athentication_middleware_1.default, controller.getProduct);
 routes.route('/create').post(athentication_middleware_1.default, controller.create);
 routes.route('/update').patch(athentication_middleware_1.default, controller.update);
-routes.route('/delete').delete(athentication_middleware_1.default, controller.deleteProduct);
+routes.route('/delete/:id').delete(athentication_middleware_1.default, controller.deleteProduct);
 exports.default = routes;

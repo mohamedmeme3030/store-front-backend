@@ -34,7 +34,7 @@ export const index = async (_req: Request, res: Response, next: NextFunction) =>
     const indexResult = await productModel.indexProduct()
     res.json({
       status: 'success',
-      data: { ...indexResult },
+      data: indexResult,
       message: 'index success'
     })
   } catch (err) {
