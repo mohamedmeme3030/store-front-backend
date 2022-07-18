@@ -94,7 +94,7 @@ class UserModel {
         hashPassword(user.password),
         user.id
       ])
-
+      connection.release
       return result.rows[0]
     } catch (err) {
       throw new Error(`Unable to update user: ${(err as Error).message}`)
@@ -115,6 +115,8 @@ class UserModel {
                    RETURNING id, first_name, last_name, password, email `
       // run query
       const result = await connection.query(sql, [id])
+      connection?.release
+
       //return the result
       return result.rows[0]
     } catch (err) {

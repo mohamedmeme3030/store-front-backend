@@ -2,7 +2,8 @@
 
 ## Getting Started
 
-This repo contains a basic Node and Express app to get you started in constructing an API. To get started, clone this repo and run `yarn` in your terminal at the project root.
+This Repo Backend Api for online store build by Nodejs,created RESTful API that can be used by onther developer.
+You Can explore Database shape and schema here [REQUIREMENT.md](REQUIREMENTS.md)
 
 ## Required Technologies
 
@@ -17,26 +18,88 @@ Your application must make use of the following libraries:
 
 ## Steps to Completion
 
+Instruction to install
+
+#### Postgres
+
+`npm i postgres`
+`npm i -D @types/postgres`
+
+#### express
+
+`npm i express`
+`npm i -D @types/express`
+
+#### dotenv
+
+`npm i dotenv`
+`npm i -D @types/dotenv`
+
+#### db-migrate
+
+`npm i db-migrate`
+`npm i db-migrate-pg`
+
+#### jsonwebtoken
+
+`npm i jsonwebtoken`
+`npm i -D @types/jsonwebtoken`
+
+#### jasmine
+
+`npm i jasmine`
+`npm i -D @types/jasmine`
+`npm i jasmine-spec-reporter`
+
 ### 1. Plan to Meet Requirements
 
 In this repo there is a `REQUIREMENTS.md` document which outlines what this API needs to supply for the frontend, as well as the agreed upon data shapes to be passed between front and backend. This is much like a document you might come across in real life when building or extending an API.
 
-Your first task is to read the requirements and update the document with the following:
+## User Endpoint
 
-- Determine the RESTful route for each endpoint listed. Add the RESTful route and HTTP verb to the document so that the frontend developer can begin to build their fetch requests.  
-  **Example**: A SHOW route: 'blogs/:id' [GET]
+### A Create User route: 'api/users/create' [POST]
 
-- Design the Postgres database tables based off the data shape requirements. Add to the requirements document the database tables and columns being sure to mark foreign keys.  
-  **Example**: You can format this however you like but these types of information should be provided
-  Table: Books (id:varchar, title:varchar, author:varchar, published_year:varchar, publisher_id:string[foreign key to publishers table], pages:number)
+This endpoint take user object in request then create user
 
-**NOTE** It is important to remember that there might not be a one to one ratio between data shapes and database tables. Data shapes only outline the structure of objects being passed between frontend and API, the database may need multiple tables to store a single shape.
+### A Index User route: 'api/users/index' [GET]
+
+This endpoint get all availble users from DB
+
+### A Get User route: 'api/users/get/:id' [GET]
+
+This endpoint get specific user based on user id
+
+## Product Endpoint
+
+### Index Product route: 'api/product/index' [GET]
+
+This endpoint get all availble users from DB
+
+### A Get Product route: 'api/product/get/:id' [GET]
+
+This endpoint get specific product based on id
+
+### A Create Product route: 'api/product/create' [POST]
+
+This endpoint take product object in request then create product
+
+## Order Endpoint
+
+### Current Order by user route: 'api/order/currentOrderByUserId/:id' [GET]
+
+This endpoint get all order that related to user id
 
 ### 2. DB Creation and Migrations
 
-Now that you have the structure of the databse outlined, it is time to create the database and migrations. Add the npm packages dotenv and db-migrate that we used in the course and setup your Postgres database. If you get stuck, you can always revisit the database lesson for a reminder.
+#### Migrate up
 
-You must also ensure that any sensitive information is hashed with bcrypt. If any passwords are found in plain text in your application it will not pass.
+we can submit our changes on db using migration
+`npx db-migrate up`
+
+#### Migrate down
+
+we can back up to our chages by migrate down
+`npx db-migrate down`
 
 ### 3. Models
 

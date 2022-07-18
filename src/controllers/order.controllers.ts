@@ -30,6 +30,19 @@ export const deleteOrder = async (req: Request, res: Response, next: NextFunctio
   }
 }
 
+export const getCurrentOrderByUserId = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const currentOrder = await orderModel.getCurrentOrderByUserId(req.params.id)
+    res.json({
+      status: 'sucess',
+      data: currentOrder,
+      message: 'get current order succ'
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
 export const index = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const indexResult = orderModel.index()

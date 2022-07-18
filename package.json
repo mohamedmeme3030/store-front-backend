@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "test": "npx tsc && jasmine",
+        "test": "export NODE_ENV=test && db-migrate up --env test && tsc && jasmine && db-migrate reset",
         "dev": "nodemon ./src/index.ts",
         "clean": "rimraf build/",
         "build": "yarn clean && npx tsc",

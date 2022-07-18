@@ -1,7 +1,6 @@
 type Order = {
-  id?: string
-  quantityProduct: number
-  status: string
+  order_id?: string
+  order_status: string
   user_id: string
 }
 

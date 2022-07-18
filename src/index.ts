@@ -32,3 +32,4 @@ app.use(errorMiddleware)
 app.listen(PORT, () => {
   console.log(`Server is starting at prot:${PORT}`)
 })
+export default app

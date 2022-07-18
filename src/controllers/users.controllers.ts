@@ -11,7 +11,7 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
     //this await function just to wait response of create methode
     const user = await userModel.create(req.body)
     res.json({
-      status: 'success',
+      status: 200,
       //we user spread operator to copy a full object
       data: { ...user },
       message: 'user created successfully'
@@ -25,7 +25,7 @@ export const getAllUser = async (_: Request, res: Response, next: NextFunction) 
   try {
     const users = await userModel.getAllUser()
     res.json({
-      status: 'sucess',
+      status: 200,
       data: users,
       message: 'retrieved succ'
     })
@@ -51,7 +51,7 @@ export const updateSpecificUser = async (req: Request, res: Response, next: Next
   try {
     const updatedUser = await userModel.updateUser(req.body)
     res.json({
-      status: 'sucess',
+      status: 200,
       data: updatedUser,
       message: 'retrieved succ'
     })
@@ -62,9 +62,9 @@ export const updateSpecificUser = async (req: Request, res: Response, next: Next
 //delete user
 export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userDeleted = await userModel.deleteUser(req.body.id as unknown as string)
+    const userDeleted = await userModel.deleteUser(req.params.id as unknown as string)
     res.json({
-      status: 'sucess',
+      status: 200,
       data: userDeleted,
       message: 'delete succ'
     })

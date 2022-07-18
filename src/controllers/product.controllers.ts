@@ -45,7 +45,7 @@ export const index = async (_req: Request, res: Response, next: NextFunction) =>
 //getSpecificProduct
 export const getProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const updatedUser = await productModel.showSpecificProduct(req.query['id'] as unknown as string)
+    const updatedUser = await productModel.showSpecificProduct(req.params.id as unknown as string)
     res.json({
       status: 'sucess',
       data: updatedUser,
@@ -58,7 +58,7 @@ export const getProduct = async (req: Request, res: Response, next: NextFunction
 
 export const deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const deletedProduct = await productModel.deleteProduct(req.query['id'] as unknown as string)
+    const deletedProduct = await productModel.deleteProduct(req.params.id as unknown as string)
     res.json({
       status: 'success',
       data: { ...deletedProduct },
