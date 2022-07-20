@@ -63,7 +63,7 @@ We need to create database for develoment and other for test
 
 - connect to the default postgres database as the server's root user `psql -U postgres`
 - In psql run the following to create a user
-  - `CREATE USER store WITH PASSWORD 'password123';`
+  - `CREATE USER store WITH PASSWORD '1997##**';`
 - In psql run the following to create the dev and test database
   - `CREATE DATABASE store_dev;`
   - `CREATE DATABASE store_test;`
