@@ -5,11 +5,11 @@ const orderModel = new OrderModel()
 export const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
     //this await function just to wait response of create methode
-    const user = await orderModel.create(req.body)
+    const order = await orderModel.create(req.body)
     res.json({
       status: 'success',
       //we user spread operator to copy a full object
-      data: { ...user },
+      data: order,
       message: 'order created successfully'
     })
   } catch (err) {
@@ -30,6 +30,20 @@ export const deleteOrder = async (req: Request, res: Response, next: NextFunctio
   }
 }
 
+export const addProduct = async (req: Request, res: Response, next: NextFunction) => {
+  const orderId: string = req.params.id
+  const productId: string = req.body.productId
+  const quantity: number = parseInt(req.body.quantity)
+
+  try {
+    const addedProduct = await orderModel.addProduct(quantity, orderId, productId)
+    res.json(addedProduct)
+  } catch (err) {
+    res.status(400)
+    res.json(err)
+  }
+}
+
 export const getCurrentOrderByUserId = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const currentOrder = await orderModel.getCurrentOrderByUserId(req.params.id)
@@ -45,7 +59,7 @@ export const getCurrentOrderByUserId = async (req: Request, res: Response, next:
 
 export const index = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const indexResult = orderModel.index()
+    const indexResult = await orderModel.index()
     res.json({
       status: 200,
       data: indexResult,

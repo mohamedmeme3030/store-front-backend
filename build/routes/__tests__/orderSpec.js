@@ -39,20 +39,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var order_model_1 = __importDefault(require("../order.model"));
-var user_model_1 = __importDefault(require("../user.model"));
-var product_model_1 = __importDefault(require("../product.model"));
+var order_model_1 = __importDefault(require("../../models/order.model"));
+var user_model_1 = __importDefault(require("../../models/user.model"));
+var product_model_1 = __importDefault(require("../../models/product.model"));
 var database_1 = __importDefault(require("../../database"));
+var supertest_1 = __importDefault(require("supertest"));
+var index_1 = __importDefault(require("../../index"));
+var request = (0, supertest_1.default)(index_1.default);
+var token = '';
 var orderModel = new order_model_1.default();
 var userModel = new user_model_1.default();
 var productModel = new product_model_1.default();
-describe('This Suit will test the order Model Functionality', function () {
-    //to be define or existing
-    describe('This will test existing methode', function () {
-        it('should have an method that get all orders by user id', function () {
-            expect(orderModel.getCurrentOrderByUserId).toBeDefined();
-        });
-    });
+describe('This Suit will test the Order API Endpoint', function () {
     //logic of method
     describe('This will test logic of order model', function () {
         var order = {
@@ -138,20 +136,64 @@ describe('This Suit will test the order Model Functionality', function () {
                 }
             });
         }); });
+        describe('This Sub Suit will test authenticate method', function () {
+            it('test the authenticate endpoint to get token', function () { return __awaiter(void 0, void 0, void 0, function () {
+                var res, _a, id, email, userToken;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0: return [4 /*yield*/, request
+                                .post('/api/users/authenticate')
+                                .set('Content-type', 'application/json')
+                                .send({ email: 'test@gmail.com', password: '12313' })];
+                        case 1:
+                            res = _b.sent();
+                            expect(res.status).toBe(200);
+                            _a = res.body.data, id = _a.id, email = _a.email, userToken = _a.token;
+                            expect(id).toBe(user.id);
+                            expect(email).toBe('test@gmail.com');
+                            token = userToken;
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+            it('test the authenticate endpoint with wrong credentials', function () { return __awaiter(void 0, void 0, void 0, function () {
+                var res;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, request
+                                .post('/api/users/authenticate')
+                                .set('Content-type', 'application/json')
+                                .send({ email: 'tt@gmail.com', password: '12313' })];
+                        case 1:
+                            res = _a.sent();
+                            expect(res.status).toBe(401);
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+        });
         //so now database prepared
-        it('getCurrentOrderByUserId method should return a new list of orders that related to user id', function () { return __awaiter(void 0, void 0, void 0, function () {
-            var ordersList;
-            var _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, orderModel.getCurrentOrderByUserId(user.id)];
-                    case 1:
-                        ordersList = _b.sent();
-                        expect(ordersList[0].order_id).toBe(order.order_id);
-                        expect((_a = ordersList[0].products) === null || _a === void 0 ? void 0 : _a.length).toBe(2);
-                        expect(ordersList.length).toBe(1);
-                        return [2 /*return*/];
-                }
+        describe('This Suit will test logic operation Of Order', function () { return __awaiter(void 0, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                it('test get current Order By UserId ', function () { return __awaiter(void 0, void 0, void 0, function () {
+                    var res;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, request
+                                    .get("/api/order/currentOrderByUserId/".concat(user.id))
+                                    .set('Content-type', 'application/json')
+                                    .set('Authorization', "Bearer ".concat(token))];
+                            case 1:
+                                res = _a.sent();
+                                expect(res.status).toBe(200);
+                                expect(res.body.data[0].order_id).toBe(order.order_id);
+                                expect(res.body.data[0].products.length).toBe(2);
+                                expect(res.body.data.length).toBe(1);
+                                return [2 /*return*/];
+                        }
+                    });
+                }); });
+                return [2 /*return*/];
             });
         }); });
     });

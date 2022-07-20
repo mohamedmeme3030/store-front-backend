@@ -8,69 +8,62 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 #### Products
 
-- Index: `'api/product/index' [GET] (token)`
-- Show [id required]: `'api/product/get/:id' [GET] (token)'`
-- Create: (arg: productOject) `'api/product/create' [POST] (token)`
-- Update: (arg: productObject) `'api/product/update' [PATCH](token)`
-- Delete: `'api/product/delete/:id' [DELETE] (token)`
-    <!-- - [OPTIONAL] Top 5 most popular products -->
-    <!-- - [OPTIONAL] Products by category (args: product category) -->
+- Index `/product/index` [GET]
+- Create `/product/create` [POST] [token required]
+- Read `/product/get:id` [GET]
+- Update `/product/update` [PATCH] [token required]
+- Delete `/product/delete/:id` [DELETE] [token required]
 
 #### Users
 
-- Index: `'api/users/index' [GET] (token)`
-- Show: [token required] `'api/users/get/:id' [GET] (token)'`
-- Create: (arg: userObject) `'api/users/create' [POST] (token)`
+- Index `/users/index` [GET] [token required]
+- Create `/users/create` [POST]
+- Read `/users/get/:id` [GET] [token required]
+- Update `/users/update` [PUT] [token required]
+- Delete `/users/delete/:id` [DELETE] [token required]
+- Auth `/users/authenticate` [POST]
 
 #### Orders
 
-- Current Order by user (args: user id)[token required]: `'api/order/currentOrderByUserId/:id' [GET] (token)`
+- Index `/order/index` [GET] [token required]
+- Create `/order/create` [POST] [token required]
+- Read `/order/get/:id` [GET] [token required]
+- Update `/orders/:id` [PUT] [token required]
+- AddProduct `/orders/:id/products` [POST] [token required]
+- Delete `/order/:id` [DELETE] [token required]
+- CurrentOrderByUserId `/order/currentOrderByUserId/:id` [GET] [token required]
 
 ## Data Shapes
 
 #### Product
 
-- id
-- name
-- price
-- [OPTIONAL] category
+Table: _product_
 
-```
-Table: product (id:uuid[primary key], name:VARCHAR(50) NOT NULL, price:VARCHAR(50) NOT NULL, category:VARCHAR(50))
-```
+- id `uuid uuid_generate_v4() PRIMARY KEY`
+- name `VARCHAR`
+- price `VARCHAR`
+- category `VARCHAR`
 
 #### User
 
-- id
-- firstName
-- lastName
-- password
+Table: _user_
 
-```
-Table: users (id:uuid[primary key], first_name:VARCHAR(50) NOT NULL, last_name:VARCHAR(50) NOT NULL, password:VARCHAR(255) NOT NULL)
-```
+- id `uuid uuid_generate_v4() PRIMARY KEY`
+- firstname `VARCHAR NOT NULL`
+- lastname `VARCHAR NOT NULL`
+- password `VARCHAR NOT NULL`
 
 #### Orders
 
-- id
-- id of each product in the order
-- quantity of each product in the order
-- user_id
-- status of order (active or complete)
+Table: _order_
 
-```
-Table: order (order_id:uuid[primary key], order_status:VARCHAR(20) NOT NULL
-user_id uuid REFERENCES users)
-```
+- order_id `uuid uuid_generate_v4() PRIMARY KEY`
+- user_id `INTEGER` `REFERENCES users(id)`
+- order_status `VARCHAR NOT NULL`
 
-#### Product-Order
+Table: _p_order_
 
-- p_id
-- o_id
-- quantity
-
-```
-Table: p_order (p_id:uuid REFERENCES product, o_id:uuid REFERENCES orders,
-quantity INTEGER NOT NULL,
-PRIMARY KEY (p_id, o_id)
-```
+- o_id `INTEGER` `REFERENCES orders(order_id)`
+- p_id `uuid` `REFERENCES product(id)`
+- quantity `INTEGER INTEGER NOT NULL`
+- id `PRIMARY KEY`

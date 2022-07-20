@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -50,22 +39,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.index = exports.getCurrentOrderByUserId = exports.deleteOrder = exports.create = void 0;
+exports.index = exports.getCurrentOrderByUserId = exports.addProduct = exports.deleteOrder = exports.create = void 0;
 var order_model_1 = __importDefault(require("../models/order.model"));
 var orderModel = new order_model_1.default();
 var create = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var user, err_1;
+    var order, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 return [4 /*yield*/, orderModel.create(req.body)];
             case 1:
-                user = _a.sent();
+                order = _a.sent();
                 res.json({
                     status: 'success',
                     //we user spread operator to copy a full object
-                    data: __assign({}, user),
+                    data: order,
                     message: 'order created successfully'
                 });
                 return [3 /*break*/, 3];
@@ -102,8 +91,34 @@ var deleteOrder = function (req, res, next) { return __awaiter(void 0, void 0, v
     });
 }); };
 exports.deleteOrder = deleteOrder;
+var addProduct = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var orderId, productId, quantity, addedProduct, err_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                orderId = req.params.id;
+                productId = req.body.productId;
+                quantity = parseInt(req.body.quantity);
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, orderModel.addProduct(quantity, orderId, productId)];
+            case 2:
+                addedProduct = _a.sent();
+                res.json(addedProduct);
+                return [3 /*break*/, 4];
+            case 3:
+                err_3 = _a.sent();
+                res.status(400);
+                res.json(err_3);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+exports.addProduct = addProduct;
 var getCurrentOrderByUserId = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var currentOrder, err_3;
+    var currentOrder, err_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -118,8 +133,8 @@ var getCurrentOrderByUserId = function (req, res, next) { return __awaiter(void 
                 });
                 return [3 /*break*/, 3];
             case 2:
-                err_3 = _a.sent();
-                next(err_3);
+                err_4 = _a.sent();
+                next(err_4);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
@@ -127,20 +142,26 @@ var getCurrentOrderByUserId = function (req, res, next) { return __awaiter(void 
 }); };
 exports.getCurrentOrderByUserId = getCurrentOrderByUserId;
 var index = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var indexResult;
+    var indexResult, err_5;
     return __generator(this, function (_a) {
-        try {
-            indexResult = orderModel.index();
-            res.json({
-                status: 200,
-                data: indexResult,
-                message: 'index success'
-            });
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, orderModel.index()];
+            case 1:
+                indexResult = _a.sent();
+                res.json({
+                    status: 200,
+                    data: indexResult,
+                    message: 'index success'
+                });
+                return [3 /*break*/, 3];
+            case 2:
+                err_5 = _a.sent();
+                next(err_5);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
-        catch (err) {
-            next(err);
-        }
-        return [2 /*return*/];
     });
 }); };
 exports.index = index;

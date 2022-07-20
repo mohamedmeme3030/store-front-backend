@@ -143,7 +143,7 @@ describe('This Suit will test the user Model Functionality', function () {
                     case 0: return [4 /*yield*/, userModel.getAllUser()];
                     case 1:
                         users = _a.sent();
-                        expect(users.length).toBe(3);
+                        expect(users.length).toBe(2);
                         return [2 /*return*/];
                 }
             });

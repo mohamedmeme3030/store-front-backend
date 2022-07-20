@@ -1,118 +1,154 @@
-# Storefront Backend Project
+# Udacity: Build A Storefront Backend
 
-## Getting Started
+This is a backend API build in Nodejs for an online store. It exposes a RESTful API that will be used by the frontend developer on the frontend.
 
-This Repo Backend Api for online store build by Nodejs,created RESTful API that can be used by onther developer.
-You Can explore Database shape and schema here [REQUIREMENT.md](REQUIREMENTS.md)
+The database schema and and API route information can be found in the [REQUIREMENT.md](REQUIREMENTS.md)
 
-## Lib
+## Installation Instructions
 
-- Postgres for the database
-- Node/Express for the application logic
-- dotenv from npm for managing environment variables
-- db-migrate from npm for migrations
-- jsonwebtoken from npm for working with JWTs
-- jasmine from npm for testing
+This section contains all the packages used in this project and how to install them. However, you can fork this repo and run the following command at the root directory to install all packages.
 
-## Steps to Completion
+`npm install`
 
-Instruction to install
+### Packages
 
-#### Postgres
-
-`npm i postgres`
-`npm i -D @types/postgres`
+Here are some of the few packages that were installed.
 
 #### express
 
-`npm i express`
+`npm i -S express`
 `npm i -D @types/express`
 
-#### dotenv
+#### typescript
 
-`npm i dotenv`
-`npm i -D @types/dotenv`
+`npm i -D typescript`
 
 #### db-migrate
 
-`npm i db-migrate`
-`npm i db-migrate-pg`
+`npm install -g db-migrate`
+
+#### g
+
+`npm install -g n`
+
+#### bcrypt
+
+`npm -i bcrypt`
+`npm -i -D @types/bcrypt`
+
+#### morgan
+
+`npm install --save morgan`
+`npm -i -D @types/morgan`
 
 #### jsonwebtoken
 
-`npm i jsonwebtoken`
-`npm i -D @types/jsonwebtoken`
+`npm install jsonwebtoken --sav`
+`npm -i -D @types/jsonwebtoken`
 
 #### jasmine
 
-`npm i jasmine`
-`npm i -D @types/jasmine`
-`npm i jasmine-spec-reporter`
+`npm install jasmine @types/jasmine @ert78gb/jasmine-ts ts-node --save-dev`
 
-### 1. Plan to Meet Requirements
+#### supertest
 
-In this repo there is a `REQUIREMENTS.md` document which outlines what this API needs to supply for the frontend, as well as the agreed upon data shapes to be passed between front and backend. This is much like a document you might come across in real life when building or extending an API.
+`npm i supertest`
+`npm i --save-dev @types/supertest`
 
-## User Endpoint
+## Set up Database
 
-### A Create User route: 'api/users/create' [POST]
+### Create Databases
 
-This endpoint take user object in request then create user
+We need to create database for develoment and other for test
 
-### A Index User route: 'api/users/index' [GET]
+- connect to the default postgres database as the server's root user `psql -U postgres`
+- In psql run the following to create a user
+  - `CREATE USER store WITH PASSWORD 'password123';`
+- In psql run the following to create the dev and test database
+  - `CREATE DATABASE store_dev;`
+  - `CREATE DATABASE store_test;`
+- Connect to the databases and grant all privileges
+  - Grant for dev database
+    - `\c store_dev`
+    - `GRANT ALL PRIVILEGES ON DATABASE store_dev TO store;`
+  - Grant for test database
+    - `\c shopping_test`
+    - `GRANT ALL PRIVILEGES ON DATABASE store_test TO store;`
 
-This endpoint get all availble users from DB
+### Migrate Database
 
-### A Get User route: 'api/users/get/:id' [GET]
+Navigate to the root directory and run the command below to migrate the database
 
-This endpoint get specific user based on user id
-
-## Product Endpoint
-
-### Index Product route: 'api/product/index' [GET]
-
-This endpoint get all availble users from DB
-
-### A Get Product route: 'api/product/get/:id' [GET]
-
-This endpoint get specific product based on id
-
-### A Create Product route: 'api/product/create' [POST]
-
-This endpoint take product object in request then create product
-
-## Order Endpoint
-
-### Current Order by user route: 'api/order/currentOrderByUserId/:id' [GET]
-
-This endpoint get all order that related to user id
-
-### 2. DB Creation and Migrations
-
-#### Migrate up
-
-we can submit our changes on db using migration
 `npx db-migrate up`
 
-#### Migrate down
+!['migrate database'](./docs/migrate_up.png)
+!['migrate database'](./docs/migrate_up_tow.png)
 
-we can back up to our chages by migrate down
-`npx db-migrate down`
+## Enviromental Variables Set up
 
-### 3. Models
+Bellow are the environmental variables that needs to be set in a `.env` file. This is the default setting that I used for development, but you can change it to what works for you.
 
-Create the models for each database table. The methods in each model should map to the endpoints in `REQUIREMENTS.md`. Remember that these models should all have test suites and mocks.
+**NB:** The given values are used in developement and testing but not in production.
 
-### 4. Express Handlers
+```
+PORT=3000
+NODE_ENV=dev
+POSTGRES_HOST=localhost
 
-Set up the Express handlers to route incoming requests to the correct model method. Make sure that the endpoints you create match up with the enpoints listed in `REQUIREMENTS.md`. Endpoints must have tests and be CORS enabled.
+POSTGRES_DB=store_dev
+POSTGRES_DB_TEST=store_test
+POSTGRES_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=1997##**
+BCRYPT_PASSWORD=your-secret-password
+SALT_ROUNDS=10
+TOKEN_SECRET=secret_key
+```
 
-### 5. JWTs
+## Start App
 
-Add JWT functionality as shown in the course. Make sure that JWTs are required for the routes listed in `REQUIUREMENTS.md`.
+`npm run dev`
 
-### 6. QA and `README.md`
+!['start server'](./docs/start_dev.png)
 
-Before submitting, make sure that your project is complete with a `README.md`. Your `README.md` must include instructions for setting up and running your project including how you setup, run, and connect to your database.
+### Running Ports
 
-Before submitting your project, spin it up and test each endpoint. If each one responds with data that matches the data shapes from the `REQUIREMENTS.md`, it is ready for submission!
+After start up, the server will start on port `3000` and the database on port `5432`
+
+## Endpoint Access
+
+All endpoints are described in the [REQUIREMENT.md](REQUIREMENTS.md) file.
+
+## Token and Authentication
+
+Tokens are passed along with the http header as
+
+```
+Authorization   Bearer <token>
+```
+
+## Testing
+
+Run test with
+
+`npm run test`
+
+It sets the environment to `test`, migrates up tables for the test database, run the test then migrate down all the tables for the test database.
+
+!['test 1'](docs/test1.png)
+!['test 2'](docs/test2.png)
+!['test 3'](docs/test3.png)
+
+## Important Notes
+
+### Environment Variables
+
+Environment variables are set in the `.env` file and added in `.gitignore` so that it won't be added to github. However, I had provided the names of the variables that need to be set above. I also provided the values that were used in development and testing.
+
+### Changing Enviroment to testing
+
+I had set up two databases, one for development and the other for testing. During testing, I had to make sure the testing database is used instead of the developement database.
+
+To acheive this, I set up a variable in the `.env` file which is by default set to `dev`. During testing, we need to run command `export NODE_ENV=test && db-migrate up --env test && tsc && jasmine && db-migrate reset`
+
+First we export NODE_ENV and set as test to get configuration of testing environment and run migration then compile typescript then run all test cases finally reset the migration

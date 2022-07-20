@@ -70,8 +70,9 @@ describe('This Suit will test the user Model Functionality', () => {
 
     it('get all user should return all users from DB', async () => {
       const users = await userModel.getAllUser()
-      expect(users.length).toBe(3)
+      expect(users.length).toBe(2)
     })
+
     it('get specific user by id', async () => {
       const returnedUser = await userModel.getSpecificUser(user.id as string)
       expect(returnedUser.id).toBe(user.id)
@@ -79,6 +80,7 @@ describe('This Suit will test the user Model Functionality', () => {
       expect(returnedUser.last_name).toBe(user.last_name)
       expect(returnedUser.email).toBe(user.email)
     })
+
     it('update method should return a user with updated value', async () => {
       const updatedUser = await userModel.updateUser({
         ...user,

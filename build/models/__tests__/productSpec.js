@@ -128,7 +128,7 @@ describe('This Suit will test the product Model Functionality', function () {
                     case 0: return [4 /*yield*/, productModel.indexProduct()];
                     case 1:
                         products = _a.sent();
-                        expect(products.length).toBe(3);
+                        expect(products.length).toBe(2);
                         return [2 /*return*/];
                 }
             });

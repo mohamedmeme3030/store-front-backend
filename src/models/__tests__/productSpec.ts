@@ -66,7 +66,7 @@ describe('This Suit will test the product Model Functionality', () => {
 
     it('get all product should return all products from DB', async () => {
       const products = await productModel.indexProduct()
-      expect(products.length).toBe(3)
+      expect(products.length).toBe(2)
     })
 
     it('get specific product by id', async () => {

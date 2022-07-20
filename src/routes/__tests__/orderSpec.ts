@@ -1,22 +1,18 @@
-import OrderModel from '../order.model'
-import UserModel from '../user.model'
-import ProductModel from '../product.model'
+import OrderModel from '../../models/order.model'
+import UserModel from '../../models/user.model'
+import ProductModel from '../../models/product.model'
 import Order from '../../types/order.type'
 import Product from '../../types/product.type'
 import db from '../../database'
 import User from '../../types/user.type'
-
+import supertest from 'supertest'
+import app from '../../index'
+const request = supertest(app)
+let token = ''
 const orderModel = new OrderModel()
 const userModel = new UserModel()
 const productModel = new ProductModel()
-describe('This Suit will test the order Model Functionality', () => {
-  //to be define or existing
-  describe('This will test existing methode', () => {
-    it('should have an method that get all orders by user id', () => {
-      expect(orderModel.getCurrentOrderByUserId).toBeDefined()
-    })
-  })
-
+describe('This Suit will test the Order API Endpoint', () => {
   //logic of method
   describe('This will test logic of order model', () => {
     const order = {
@@ -68,12 +64,17 @@ describe('This Suit will test the order Model Functionality', () => {
         productOne.id as unknown as string
       )
       expect(addedProduct.o_id).toBe(order.order_id as unknown as string)
+      // order.products.push(addedProduct.p_id as unknown as string)
+
+      // order.products?.push(addedProduct.p_id)
       const addedProductTow = await orderModel.addProduct(
         3,
         order.order_id as unknown as string,
         productTow.id as unknown as string
       )
       expect(addedProductTow.o_id).toBe(order.order_id as unknown as string)
+
+      // order.products.push(addedProductTow.p_id as unknown as string)
     })
 
     afterAll(async () => {
@@ -87,12 +88,43 @@ describe('This Suit will test the order Model Functionality', () => {
       connection.release()
     })
 
+    describe('This Sub Suit will test authenticate method', () => {
+      it('test the authenticate endpoint to get token', async () => {
+        const res = await request
+          .post('/api/users/authenticate')
+          .set('Content-type', 'application/json')
+          .send({ email: 'test@gmail.com', password: '12313' })
+
+        expect(res.status).toBe(200)
+        const { id, email, token: userToken } = res.body.data
+        expect(id).toBe(user.id)
+        expect(email).toBe('test@gmail.com')
+        token = userToken
+      })
+
+      it('test the authenticate endpoint with wrong credentials', async () => {
+        const res = await request
+          .post('/api/users/authenticate')
+          .set('Content-type', 'application/json')
+          .send({ email: 'tt@gmail.com', password: '12313' })
+
+        expect(res.status).toBe(401)
+      })
+    })
+
     //so now database prepared
-    it('getCurrentOrderByUserId method should return a new list of orders that related to user id', async () => {
-      const ordersList = await orderModel.getCurrentOrderByUserId(user.id as unknown as string)
-      expect(ordersList[0].order_id).toBe(order.order_id)
-      expect(ordersList[0].products?.length).toBe(2)
-      expect(ordersList.length).toBe(1)
+    describe('This Suit will test logic operation Of Order', async () => {
+      it('test get current Order By UserId ', async () => {
+        const res = await request
+          .get(`/api/order/currentOrderByUserId/${user.id}`)
+          .set('Content-type', 'application/json')
+          .set('Authorization', `Bearer ${token}`)
+
+        expect(res.status).toBe(200)
+        expect(res.body.data[0].order_id).toBe(order.order_id)
+        expect(res.body.data[0].products.length).toBe(2)
+        expect(res.body.data.length).toBe(1)
+      })
     })
   })
 })

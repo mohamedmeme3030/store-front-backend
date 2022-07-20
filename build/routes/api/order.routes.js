@@ -35,6 +35,7 @@ var routes = (0, express_1.Router)();
 //after that we can make order
 routes.route('/create').post(athentication_middleware_1.default, controllers.create);
 routes.route('/index').get(athentication_middleware_1.default, controllers.index);
-routes.route('/delete').delete(athentication_middleware_1.default, controllers.deleteOrder);
+routes.route('/delete/:id').delete(athentication_middleware_1.default, controllers.deleteOrder);
+routes.route('/:id/products').post(athentication_middleware_1.default, controllers.addProduct);
 routes.route('/currentOrderByUserId/:id').get(athentication_middleware_1.default, controllers.getCurrentOrderByUserId);
 exports.default = routes;

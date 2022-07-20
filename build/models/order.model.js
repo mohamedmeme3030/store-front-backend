@@ -43,50 +43,53 @@ var database_1 = __importDefault(require("../database"));
 var OrderModel = /** @class */ (function () {
     function OrderModel() {
     }
+    //this method get products of order based on order id and status is Active
     OrderModel.prototype.getCurrentOrderByUserId = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var connection, sqlToGetOrderList, result, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var connection, sqlToGetOrderList, result, _i, _a, order, productsID, error_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         connection = undefined;
-                        _a.label = 1;
+                        _b.label = 1;
                     case 1:
-                        _a.trys.push([1, 4, 5, 6]);
+                        _b.trys.push([1, 8, 9, 10]);
                         return [4 /*yield*/, database_1.default.connect()
                             //sql query
                         ];
                     case 2:
                         //open connection with DB
-                        connection = _a.sent();
-                        sqlToGetOrderList = "SELECT order_id, order_status FROM orders \n       WHERE user_id=$1 ";
+                        connection = _b.sent();
+                        sqlToGetOrderList = "SELECT order_id, order_status FROM orders \n       WHERE user_id=$1";
                         return [4 /*yield*/, connection.query(sqlToGetOrderList, [id])
                             //array of product
-                            // let arrProduct: Product[] | undefined = undefined
-                            // for (const order of result.rows) {
-                            //   const products = await this.getProductsOfOrder(order.order_id as string)
-                            //   arrProduct = products
-                            // }
-                            //return created user
                         ];
                     case 3:
-                        result = _a.sent();
-                        //array of product
-                        // let arrProduct: Product[] | undefined = undefined
-                        // for (const order of result.rows) {
-                        //   const products = await this.getProductsOfOrder(order.order_id as string)
-                        //   arrProduct = products
-                        // }
-                        //return created user
-                        return [2 /*return*/, result.rows];
+                        result = _b.sent();
+                        _i = 0, _a = result.rows;
+                        _b.label = 4;
                     case 4:
-                        error_1 = _a.sent();
-                        throw new Error("Unable to get Order : ".concat(error_1.message));
+                        if (!(_i < _a.length)) return [3 /*break*/, 7];
+                        order = _a[_i];
+                        return [4 /*yield*/, this.getProductsOfOrder(order.order_id)];
                     case 5:
+                        productsID = _b.sent();
+                        order.products = productsID;
+                        _b.label = 6;
+                    case 6:
+                        _i++;
+                        return [3 /*break*/, 4];
+                    case 7: 
+                    //return created user
+                    return [2 /*return*/, result.rows];
+                    case 8:
+                        error_1 = _b.sent();
+                        throw new Error("Unable to get Order : ".concat(error_1.message));
+                    case 9:
                         //after query release the connection
                         connection === null || connection === void 0 ? void 0 : connection.release();
                         return [7 /*endfinally*/];
-                    case 6: return [2 /*return*/];
+                    case 10: return [2 /*return*/];
                 }
             });
         });
@@ -94,7 +97,7 @@ var OrderModel = /** @class */ (function () {
     //get all products of specific order
     OrderModel.prototype.getProductsOfOrder = function (orderId) {
         return __awaiter(this, void 0, void 0, function () {
-            var connection, sqlToGetProducts, result, err_1;
+            var connection, sqlGetProductsID, result, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -104,12 +107,18 @@ var OrderModel = /** @class */ (function () {
                         _a.trys.push([1, 4, 5, 6]);
                         return [4 /*yield*/, database_1.default.connect()
                             //sql query
+                            // const sqlToGetProducts = `SELECT p_order.
+                            // product.name, product.price,
+                            // p_order.quantity, product.id
+                            // FROM product INNER JOIN p_order ON product.id = p_order.p_id`
+                            //write sql inner join to get all product id from
+                            //p_order table with orders table
                         ];
                     case 2:
                         //open connection with DB
                         connection = _a.sent();
-                        sqlToGetProducts = "SELECT  \n      product.name, product.price, product.category\n      p_order.quantity \n      FROM product INNER JOIN p_order ON product.id = p_order.p_id\n      WHERE user_id=$1 ";
-                        return [4 /*yield*/, connection.query(sqlToGetProducts, [orderId])];
+                        sqlGetProductsID = "SELECT p_order.p_id \n      FROM p_order INNER JOIN orders ON orders.order_id=p_order.o_id\n      WHERE orders.order_id=$1";
+                        return [4 /*yield*/, connection.query(sqlGetProductsID, [orderId])];
                     case 3:
                         result = _a.sent();
                         return [2 /*return*/, result.rows];
@@ -142,7 +151,7 @@ var OrderModel = /** @class */ (function () {
                     case 2:
                         //open connection with DB
                         connection = _a.sent();
-                        sqlInsertBasicOrderInfo = "INSERT INTO orders (user_id, order_status) \n      VALUES ($1,$2) returning user_id, order_status, order_id ";
+                        sqlInsertBasicOrderInfo = "INSERT INTO orders (user_id, order_status) \n      VALUES ($1,$2) returning *";
                         return [4 /*yield*/, connection.query(sqlInsertBasicOrderInfo, [
                                 order.user_id,
                                 order.order_status
@@ -155,11 +164,11 @@ var OrderModel = /** @class */ (function () {
                         //to able to get all products by the order id
                         // const sqlOrderProduct = `INSERT INTO p_order (p_id, o_id, quantity)
                         //                          VALUES ($1,$2,$3) returning *`
-                        // //productArr this array of products of this order
+                        // // //productArr this array of products of this order
                         // const productArr = []
                         // let resultProductOrder = undefined
                         // for (const product of order.products) {
-                        //   // product.quantity = 1
+                        //   product.quantity = 1
                         //   // console.log(product)
                         //   //run query that insert into order_product
                         //   resultProductOrder = await connection.query<Order>(sqlOrderProduct, [
@@ -171,7 +180,7 @@ var OrderModel = /** @class */ (function () {
                         //   productArr.push(resultProductOrder.rows[0])
                         // }
                         //return created user
-                        return [2 /*return*/, order];
+                        return [2 /*return*/, resultInsertBasicOrderInfo.rows[0]];
                     case 4:
                         error_2 = _a.sent();
                         throw new Error("Unable to create Order : ".concat(error_2.message));
@@ -200,7 +209,7 @@ var OrderModel = /** @class */ (function () {
                     case 2:
                         //open connection
                         connection = _a.sent();
-                        sql = "SELECT * FROM orders";
+                        sql = "SELECT order_id, order_status, user_id FROM orders";
                         return [4 /*yield*/, connection.query(sql)
                             //get the result
                         ];
@@ -249,6 +258,37 @@ var OrderModel = /** @class */ (function () {
                         throw new Error("Unable to delete order: ".concat(err_3.message));
                     case 5:
                         //release connection
+                        connection === null || connection === void 0 ? void 0 : connection.release();
+                        return [7 /*endfinally*/];
+                    case 6: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    //add product
+    OrderModel.prototype.addProduct = function (quantity, orderId, productId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var connection, sql, result, err_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        connection = undefined;
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 4, 5, 6]);
+                        sql = 'INSERT INTO p_order (p_id,o_id,quantity) VALUES ($1,$2,$3) returning p_id, o_id, quantity';
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 2:
+                        //open connection with DB
+                        connection = _a.sent();
+                        return [4 /*yield*/, connection.query(sql, [productId, orderId, quantity])];
+                    case 3:
+                        result = _a.sent();
+                        return [2 /*return*/, result.rows[0]];
+                    case 4:
+                        err_4 = _a.sent();
+                        throw new Error("Could not add product ".concat(productId, " to order ").concat(orderId, ": ").concat(err_4));
+                    case 5:
                         connection === null || connection === void 0 ? void 0 : connection.release();
                         return [7 /*endfinally*/];
                     case 6: return [2 /*return*/];
