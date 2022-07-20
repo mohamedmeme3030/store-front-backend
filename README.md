@@ -59,21 +59,17 @@ Here are some of the few packages that were installed.
 
 ### Create Databases
 
-We need to create database for develoment and other for test
+We need to create dev and test database.
 
 - connect to the default postgres database as the server's root user `psql -U postgres`
 - In psql run the following to create a user
-  - `CREATE USER store WITH PASSWORD '1997##**';`
+  - `CREATE USER postgres WITH PASSWORD '1997##**';`
 - In psql run the following to create the dev and test database
   - `CREATE DATABASE store_dev;`
   - `CREATE DATABASE store_test;`
 - Connect to the databases and grant all privileges
-  - Grant for dev database
-    - `\c store_dev`
-    - `GRANT ALL PRIVILEGES ON DATABASE store_dev TO store;`
-  - Grant for test database
-    - `\c shopping_test`
-    - `GRANT ALL PRIVILEGES ON DATABASE store_test TO store;`
+  - `\c store_dev`
+  - `\c store_test`
 
 ### Migrate Database
 
@@ -86,9 +82,20 @@ Navigate to the root directory and run the command below to migrate the database
 
 ## Enviromental Variables Set up
 
-Bellow are the environmental variables that needs to be set in a `.env` file. This is the default setting that I used for development, but you can change it to what works for you.
+We have an .env file that contains all Enviroment Variables
 
-**NB:** The given values are used in developement and testing but not in production.
+##### listed below with description:
+
+- PORT= 3000 this server port
+- NODE_ENV=dev this default be env for our database configuration
+- POSTGRES_HOST=localhost this our host name just connect locally so its be localhost
+- POSTGRES_DB=store_dev this name database that will be connect
+- POSTGRES_PORT=5432 this our port od database server
+- POSTGRES_USER=store this user of database that we created a bove
+- POSTGRES_PASSWORD=1997##\*\* this my pass for main postgres
+- BCRYPT_PASSWORD=your-secret-password this is just any plain text to be the default pepper
+- SALT_ROUNDS=10 this default salt for json web token
+- TOKEN_SECRET=secret_key this used while json web token to generate token
 
 ```
 PORT=3000
@@ -98,7 +105,7 @@ POSTGRES_HOST=localhost
 POSTGRES_DB=store_dev
 POSTGRES_DB_TEST=store_test
 POSTGRES_PORT=5432
-POSTGRES_USER=store
+POSTGRES_USER=postgres
 POSTGRES_PASSWORD=1997##**
 BCRYPT_PASSWORD=your-secret-password
 SALT_ROUNDS=10
@@ -141,14 +148,10 @@ It sets the environment to `test`, migrates up tables for the test database, run
 
 ## Important Notes
 
-### Environment Variables
-
-Environment variables are set in the `.env` file and added in `.gitignore` so that it won't be added to github. However, I had provided the names of the variables that need to be set above. I also provided the values that were used in development and testing.
-
 ### Changing Enviroment to testing
 
 I had set up two databases, one for development and the other for testing. During testing, I had to make sure the testing database is used instead of the developement database.
 
 To acheive this, I set up a variable in the `.env` file which is by default set to `dev`. During testing, we need to run command `export NODE_ENV=test && db-migrate up --env test && tsc && jasmine && db-migrate reset`
 
-First we export NODE_ENV and set as test to get configuration of testing environment and run migration then compile typescript then run all test cases finally reset the migration
+I export first Environment varaible NODE_ENV and set dev valud, after that run migration up with test database then compile typescript then run jasmine and finalyy reset out migration

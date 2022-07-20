@@ -8,30 +8,92 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 #### Products
 
-- Index `/product/index` [GET]
-- Create `/product/create` [POST] [token required]
-- Read `/product/get:id` [GET]
-- Update `/product/update` [PATCH] [token required]
+- Index: `product/index` [GET]
+  proceed it: localhost:3000/api/products/index
+- Create: `product/create` [POST] [token required]
+  proceed it: localhost:3000/api/products/create
+  (arg:Product) as => jason
+  {
+  "name":"AAA",
+  "price":30,
+  "category":"AGG"
+  }
+
+- Show: `product/get:id` [GET]
+  proceed it: localhost:3000/api/products/get/id
+
+- Update `product/update` [PATCH] [token required]
+  proceed it: localhost:3000/api/products/update
+  (arg:Product) as => jason
+  {
+  "name":"AAA",
+  "price":30,
+  "category":"AGG"
+  }
+
 - Delete `/product/delete/:id` [DELETE] [token required]
+  proceed it: localhost:3000/api/products/delete/id
 
 #### Users
 
-- Index `/users/index` [GET] [token required]
-- Create `/users/create` [POST]
-- Read `/users/get/:id` [GET] [token required]
-- Update `/users/update` [PUT] [token required]
-- Delete `/users/delete/:id` [DELETE] [token required]
-- Auth `/users/authenticate` [POST]
+- Index: `/users/index` [GET] [token required]
+  proceed it: localhost:3000/api/users/index
+- Create: `/users/create` [POST]
+  proceed it: localhost:3000/api/users/create
+  (arg:User) as => jason
+  {
+  "first_name":"XXX",
+  "last_name":"XXXX",
+  "email":"XXXX@gmail.com",
+  "password":"XXXX"
+  }
+- Show: `/users/get/:id` [GET] [token required]
+  proceed it: localhost:3000/api/products/get/:id
+- Update `/users/update` [PATCH] [token required]
+  proceed it: localhost:3000/api/users/update
+  (arg:User) as => jason
+  {
+  "first_name":"XXX",
+  "last_name":"XXXX",
+  "email":"XXXX@gmail.com",
+  "password":"XXXX"
+  }
+
+- Delete: `/users/delete/:id` [DELETE] [token required]
+  proceed it: localhost:3000/api/products/delete/:id
+
+- Auth: `/users/authenticate` [POST]
+  proceed it: localhost:3000/api/products/authenticate
+  send email and password as => jason
+  {
+  "email":"XXXX@gmail.com",
+  "password":"XXXX"
+  }
+  to validate thes email and pass then send a token for this user to be authorized
 
 #### Orders
 
-- Index `/order/index` [GET] [token required]
+- Index: `/order/index` [GET] [token required]
+  proceed it: localhost:3000/api/order/index
+
 - Create `/order/create` [POST] [token required]
-- Read `/order/get/:id` [GET] [token required]
-- Update `/orders/:id` [PUT] [token required]
-- AddProduct `/orders/:id/products` [POST] [token required]
-- Delete `/order/:id` [DELETE] [token required]
+  proceed it: localhost:3000/api/order/create
+  send user_id and order_status in body thid request as json =>
+  {
+  "user_id":"3dcaa40f-f0a9-41aa-a6ec-8e3211e7a8c6",
+  "order_status":"Active"
+  }
+
+- AddProduct: `/orders/:id/products` [POST] [token required]
+  proceed it: localhost:3000/api/order/:id/products
+  to add products should have order so send order_id as param in url and set in body product id and quantity as json =>
+  {
+  "productId":"45e54cd4-82f7-49de-a451-1e696c97245a",
+  "quantity":"2"
+  }
 - CurrentOrderByUserId `/order/currentOrderByUserId/:id` [GET] [token required]
+  proceed it: localhost:3000/api/order/currentOrderByUserId
+  to get current order by the user id so all that you need send user id in url params
 
 ## Data Shapes
 
@@ -39,31 +101,49 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 Table: _product_
 
-- id `uuid uuid_generate_v4() PRIMARY KEY`
-- name `VARCHAR`
-- price `VARCHAR`
-- category `VARCHAR`
+- id
+- name
+- price
+- category
+
+##### Create Script
+
+`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; CREATE TABLE product ( id uuid DEFAULT uuid_generate_v4() PRIMARY KEY, name VARCHAR(50) NOT NULL, price VARCHAR(50) NOT NULL, category VARCHAR(50) );`
 
 #### User
 
 Table: _user_
 
-- id `uuid uuid_generate_v4() PRIMARY KEY`
-- firstname `VARCHAR NOT NULL`
-- lastname `VARCHAR NOT NULL`
-- password `VARCHAR NOT NULL`
+- id
+- firstname
+- lastname
+- password
+
+##### Create Script
+
+`/* Replace with your SQL commands */ CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; CREATE TABLE users ( id uuid DEFAULT uuid_generate_v4() PRIMARY KEY, first_name VARCHAR(50) NOT NULL, last_name VARCHAR(50) NOT NULL, password VARCHAR(255) NOT NULL );`
 
 #### Orders
 
 Table: _order_
 
-- order_id `uuid uuid_generate_v4() PRIMARY KEY`
-- user_id `INTEGER` `REFERENCES users(id)`
-- order_status `VARCHAR NOT NULL`
+- order_id
+- user_id
+- order_status
+
+##### Create Script
+
+`CREATE TABLE orders ( order_id uuid DEFAULT uuid_generate_v4() PRIMARY KEY, order_status VARCHAR(20) NOT NULL, user_id uuid REFERENCES users );`
+
+#### ProductOrder
 
 Table: _p_order_
 
-- o_id `INTEGER` `REFERENCES orders(order_id)`
-- p_id `uuid` `REFERENCES product(id)`
-- quantity `INTEGER INTEGER NOT NULL`
-- id `PRIMARY KEY`
+- o_id
+- p_id
+- quantity
+- id
+
+##### Create Script
+
+`CREATE TABLE p_order ( p_id uuid REFERENCES product, o_id uuid REFERENCES orders, quantity INTEGER NOT NULL, id uuid DEFAULT uuid_generate_v4() PRIMARY KEY );`
